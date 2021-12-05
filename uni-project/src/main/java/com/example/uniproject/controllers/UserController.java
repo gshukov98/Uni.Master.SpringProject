@@ -47,21 +47,20 @@ public class UserController {
 
 		return new ResponseEntity<UserEntity>(HttpStatus.BAD_REQUEST);
 	}
-
+	
 	@PostMapping(path = "/login")
-	public ResponseEntity<Integer> login(@RequestParam(value = "username") String username,
+	public String login(@RequestParam(value = "username") String username,
 			@RequestParam(value = "password") String password, HttpSession session) {
 
-		String hashedPassword = hashAlgorithm(password);
-		UserEntity user = _userRepository.findUserByUsernameAndPassword(username, hashedPassword);
+		UserEntity user = _userRepository.findUserByUsernameAndPassword(username, hashAlgorithm(password));
 
 		if (user != null) {
 			session.setAttribute("user", user);
 
-			return new ResponseEntity<Integer>(user.getId(), HttpStatus.OK);
+			return "products.html";
 		}
 
-		return new ResponseEntity<Integer>(-1, HttpStatus.UNAUTHORIZED);
+		return "error.html";
 	}
 
 	@PostMapping(path = "/logout")
