@@ -49,17 +49,55 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 					<div class="navbar-nav">
-						<a class="nav-item nav-link active" href="#">Продукти<span
+						<a class="nav-item nav-link" href="products.html">Продукти</a>
+						<a class="nav-item nav-link active" href="#">Категории<span
 							class="sr-only">(current)</span></a> <a class="nav-item nav-link"
-							href="category.html">Категории</a> <a class="nav-item nav-link"
 							id="logout" href="index.html">Изход</a>
 					</div>
 				</div>
 			</nav>
 		</div>
 	</header>
+	
+	<div class="container">
+	<p>Добавяне на категория</p>
+		<div class="col-md-5">
+			<form id="add-category-form" class="basic-panel" action="addcategory">
+				  <div class="form-group">
+				    <label for="categoryName">Име</label>
+				    <input type="text" class="form-control" id="categoryName" name="categoryName" placeholder="Въведете име">
+				  </div>
+				  <button id="addCategoryButton" name="addCategoryButton" type="submit" class="btn btn-primary">Добави</button>
+			</form>
+		</div>
+		
+		<div class="col-sm-8">
 
-	<p>Products</p>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Категории</h3>
+                        </div>
+
+                        <ul class="list-group" style="min-height:241px;" id="category-list">                                         
+        
+                        </ul>
+                    </div>
+
+                </div>
+	</div>
+
+
+<li class="list-group-item" style="display: none;" id="cloneMe">
+    <div class="row">
+        <div class="col-sm-7 col-xs-6">
+            <h4>Пловдив</h4>
+        </div>
+        <div class="col-sm-3 col-xs-3">
+        	<button type="button" class="btn btn-danger pull-right edit-category"><span class="glyphicon glyphicon-remove"></span><span class="hidden-xs"> Редактирай</span></button>
+            <button type="button" class="btn btn-danger pull-right remove-category"><span class="glyphicon glyphicon-remove"></span><span class="hidden-xs"> Изтрий</span></button>
+        </div>
+    </div>
+</li> 
 
 	<script>
 		$(document).ready(function() {
