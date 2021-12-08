@@ -1,9 +1,13 @@
 package com.example.uniproject.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,6 +51,26 @@ public class CategoryController {
 	@GetMapping(path ="/category/all")
 	public List<ProductCategoryEnitity> getAllCategories(){
 		return _productCategoryRepository.findAll();		
+	}
+	
+	@DeleteMapping(path = "/category/delete")
+	public ResponseEntity<Boolean> deleteCategory(@RequestParam(value = "id") int id, HttpSession session){
+		UserEntity user = (UserEntity) session.getAttribute("user");
+		
+		if(user == null) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.UNAUTHORIZED);
+		}
+		
+		Optional<ProductCategoryEnitity> catEntity = _productCategoryRepository.findById(id);
+		
+		if(catEntity.isPresent()) {
+			ProductCategoryEnitity category = catEntity.get();
+			_productCategoryRepository.delete(category);
+			return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+		}
+		else {
+			return new ResponseEntity<Boolean>(false,HttpStatus.NOT_FOUND);
+		}
 	}
 	
 

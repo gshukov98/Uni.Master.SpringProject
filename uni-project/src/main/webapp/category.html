@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Продукти</title>
+<title>Weather App</title>
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 
@@ -10,13 +10,16 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+<link href="assets/css/main.css" rel="stylesheet">
 
 <script src="js/vendor/jquery/jquery-1.12.1.min.js"></script>
+<script src="js/vendor/bootstrap/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
 
 
-<link rel="stylesheet"
+<!-- <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
@@ -30,79 +33,78 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
 	integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-	crossorigin="anonymous"></script>
-
+	crossorigin="anonymous"></script> -->
 
 </head>
 <body>
 
-	<header>
-		<div class="container">
+	<div class="home-page">
 
-			<nav class="navbar navbar-expand-lg navbar-light bg-light">
-				<a class="navbar-brand" href="#">Меню</a>
-				<button class="navbar-toggler" type="button" data-toggle="collapse"
-					data-target="#navbarNavAltMarkup"
-					aria-controls="navbarNavAltMarkup" aria-expanded="false"
-					aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-					<div class="navbar-nav">
-						<a class="nav-item nav-link" href="products.html">Продукти</a> <a
-							class="nav-item nav-link active" href="#">Категории<span
-							class="sr-only">(current)</span></a> <a class="nav-item nav-link"
-							id="logout" href="index.html">Изход</a>
+		<header>
+			<div class="container">
+
+				<nav class="navbar navbar-expand-lg navbar-light bg-light">
+					<a class="navbar-brand" href="#">Меню</a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse"
+						data-target="#navbarNavAltMarkup"
+						aria-controls="navbarNavAltMarkup" aria-expanded="false"
+						aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+						<div class="navbar-nav">
+							<a class="nav-item nav-link" href="products.html">Продукти</a> <a
+								class="nav-item nav-link active" href="#">Категории<span
+								class="sr-only">(current)</span></a> <a class="nav-item nav-link"
+								id="logout" href="index.html">Изход</a>
+						</div>
 					</div>
-				</div>
-			</nav>
-		</div>
-	</header>
+				</nav>
+			</div>
+		</header>
 
-	<div class="container">
-		<p>Добавяне на категория</p>
-		<div class="col-md-5">
-			
-				<div class="form-group">
-					<textarea class="form-control" rows="3" name="categoryName"
-											id="categoryName"></textarea>
-				</div>
-				<button type="button" class="btn btn-primary pull-right publish"><span class="glyphicon glyphicon-globe"></span>Добави</button>
-			
-		</div>
 
-		<div class="col-sm-8">
-
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3 class="panel-title">Категории</h3>
-				</div>
-
-				<ul class="list-group" style="min-height: 241px;" id="category-list">
-
-				</ul>
+		<div class="container">
+			<p>Добавяне на категория</p>
+			<div class="col-md-5">
+				<form id="add-category" class="basic-panel" action="category/add"
+					method="POST">
+					<div class="form-group">
+						<label for="categoryName">Име</label> <input type="text"
+							class="form-control" id="categoryName" name="categoryName"
+							placeholder="Въведете име">
+					</div>
+					<button type="submit" class="btn btn-primary add">Добави</button>
+				</form>
 			</div>
 
-		</div>
-	</div>
+			<div class="col-sm-8">
 
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Категории</h3>
+					</div>
+
+					<ul class="list-group" style="min-height: 241px;" id="category-list">
+
+					</ul>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
 
 	<li class="list-group-item" style="display: none;" id="cloneMe">
 		<div class="row">
+
 			<div class="col-sm-7 col-xs-6">
-				<h4>Пловдив</h4>
+
+				<h4>Категория</h4>
 			</div>
-			<div class="col-sm-3 col-xs-3">
-				<button type="button"
-					class="btn btn-danger pull-right edit-category">
-					<span class="glyphicon glyphicon-remove"></span><span
-						class="hidden-xs"> Редактирай</span>
-				</button>
-				<button type="button"
-					class="btn btn-danger pull-right remove-category">
-					<span class="glyphicon glyphicon-remove"></span><span
-						class="hidden-xs"> Изтрий</span>
-				</button>
+			<div class="col-sm-3 col-xs-12">
+				<button type="button" class="btn btn-danger pull-right delete"><span class="glyphicon glyphicon-remove"></span>Изтриване</button>
+				<button type="button" class="btn btn-success pull-right update"><span class="glyphicon glyphicon-plus"></span>Ъпдейт</button>
 			</div>
 		</div>
 	</li>
@@ -110,67 +112,90 @@
 	<script>
 		$(document).ready(
 				function() {
-
-					function addCategory() {
+					
+					$('.add').click(function(){
 						categoryName = $('#categoryName').val();
-
+					});
+					
+					function addCategory(data){
+						categoryName = $('#categoryName').val();
+						 
 						$.ajax({
-							url : "/category/add",
-							method : "POST",
-							data : {
-								categoryName : categoryName
+							url:'/category/add',
+							method: "POST",
+							data:{
+								categoryName: categoryName
 							},
-
-							success : function(data) {
-								if (data.includes("Error:")) {
+							success: function(data){
+								if(data.includes("Error:")){
 									alert(data);
-								} else {
-									postCategory(categoryName);
+								}else{
+									showCategory(categoryName,data);
 								}
 							},
-							fail : function() {
-								alert("Error when send request!");
+							fail: function(){
+								alert("Errot");
 							}
 						});
 					}
-
-					function postCategory(categoryName, categoryId, userId) {
-
+					
+					function deleteCategory(category, id){
+						$.ajax({
+							url: "/category/delete",
+							method: "DELETE",
+							data: {
+								id: id
+							},
+							complete: function(data){
+								switch(data.status){
+								case 200:
+									category.remove();
+									break;
+								case 401:
+									window.location.href="index.html"
+									break;
+								case 404:
+									alert("Category nqmaaaa");
+									break;
+								}
+							}
+						});
+					}
+					
+					function showCategory(categoryName, categoryId){
 						var kloning = $('#cloneMe').clone();
-
+						
 						kloning.find('h4').text(categoryName);
-
-						kloning.find('button').click(function(){
-	                          kloning.remove();
-	                      });
-
+						
+						kloning.find('.delete').click(function(){
+							deleteCategory(kloning, categoryId)
+						});
+						
+						kloning.find('.update').click(function(){
+							updateCategory(kloning, categoryId)
+						});
+						
 						$('#category-list').prepend(kloning);
-
-						//$('#comment').val("");
-
+						$('#cloneMe').val("");
+						
 						kloning.show();
 					}
 
-					$('.publish').click(function() {
-						addCategory();
-					});
-
-					function getAllCategories() {
+					function getAllCategories(){
 						$.ajax({
-							url : "/category/all",
-							method : "GET",
-							success : function(data) {
-								data.forEach(function(category) {
-									postComment(category.name, category.id,
-											category.user.id);
+							url: "/category/all",
+							method: "GET",
+							success: function(data) {
+								data.forEach(function (category){
+									showCategory(category.name,category.id);
 								});
 							},
-							fail : function() {
-								alert("categories failed to load!");
+							fail: function(){
+								alert("Brada");
 							}
 						});
 					}
-
+					
 					$('#logout').on('click', function() {
 
 						$.ajax({
@@ -190,6 +215,5 @@
 					getAllCategories();
 				});
 	</script>
-
 </body>
 </html>
