@@ -85,7 +85,8 @@
 						<h3 class="panel-title">Категории</h3>
 					</div>
 
-					<ul class="list-group" style="min-height: 241px;" id="category-list">
+					<ul class="list-group" style="min-height: 241px;"
+						id="category-list">
 
 					</ul>
 				</div>
@@ -93,6 +94,33 @@
 			</div>
 		</div>
 
+	</div>
+
+
+	<div id="update-modal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Редактиране на категория</h4>
+				</div>
+				<div class="modal-body">
+
+
+					<div class="form-group">
+						<label for="update-name">Име:</label> <input type="text"
+							class="form-control" id="update-name" name="update-name">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Затвори</button>
+					<button type="button" class="btn btn-success update-butonq">Запази</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<li class="list-group-item" style="display: none;" id="cloneMe">
@@ -103,117 +131,150 @@
 				<h4>Категория</h4>
 			</div>
 			<div class="col-sm-3 col-xs-12">
-				<button type="button" class="btn btn-danger pull-right delete"><span class="glyphicon glyphicon-remove"></span>Изтриване</button>
-				<button type="button" class="btn btn-success pull-right update"><span class="glyphicon glyphicon-plus"></span>Ъпдейт</button>
+				<button type="button" class="btn btn-danger pull-right delete">
+					<span class="glyphicon glyphicon-remove"></span>Изтриване
+				</button>
+				<button type="button" class="btn btn-success pull-right update">
+					<span class="glyphicon glyphicon-plus"></span>Ъпдейт
+				</button>
 			</div>
 		</div>
 	</li>
 
 	<script>
-		$(document).ready(
-				function() {
-					
-					$('.add').click(function(){
-						categoryName = $('#categoryName').val();
-					});
-					
-					function addCategory(data){
-						categoryName = $('#categoryName').val();
-						 
-						$.ajax({
-							url:'/category/add',
-							method: "POST",
-							data:{
-								categoryName: categoryName
-							},
-							success: function(data){
-								if(data.includes("Error:")){
-									alert(data);
-								}else{
-									showCategory(categoryName,data);
-								}
-							},
-							fail: function(){
-								alert("Errot");
-							}
-						});
+		$(document).ready(function() {
+
+			$('.add').click(function() {
+				categoryName = $('#categoryName').val();
+			});
+
+			function addCategory(data) {
+				categoryName = $('#categoryName').val();
+
+				$.ajax({
+					url : '/category/add',
+					method : "POST",
+					data : {
+						categoryName : categoryName
+					},
+					success : function(data) {
+						if (data.includes("Error:")) {
+							alert(data);
+						} else {
+							showCategory(categoryName, data);
+						}
+					},
+					fail : function() {
+						alert("Errot");
 					}
-					
-					function deleteCategory(category, id){
-						$.ajax({
-							url: "/category/delete",
-							method: "DELETE",
-							data: {
-								id: id
-							},
-							complete: function(data){
-								switch(data.status){
-								case 200:
-									category.remove();
-									break;
-								case 401:
-									window.location.href="index.html"
-									break;
-								case 404:
-									alert("Category nqmaaaa");
-									break;
-								}
-							}
-						});
-					}
-					
-					function showCategory(categoryName, categoryId){
-						var kloning = $('#cloneMe').clone();
-						
-						kloning.find('h4').text(categoryName);
-						
-						kloning.find('.delete').click(function(){
-							deleteCategory(kloning, categoryId)
-						});
-						
-						kloning.find('.update').click(function(){
-							updateCategory(kloning, categoryId)
-						});
-						
-						$('#category-list').prepend(kloning);
-						$('#cloneMe').val("");
-						
-						kloning.show();
-					}
-
-					function getAllCategories(){
-						$.ajax({
-							url: "/category/all",
-							method: "GET",
-							success: function(data) {
-								data.forEach(function (category){
-									showCategory(category.name,category.id);
-								});
-							},
-							fail: function(){
-								alert("Brada");
-							}
-						});
-					}
-					
-					$('#logout').on('click', function() {
-
-						$.ajax({
-							url : "logout",
-							method : "POST",
-							complete : function(data) {
-								if (data.status == 418) {
-									alert("Why are you a teapot?");
-								}
-
-								window.location.href = "index.html";
-							}
-						});
-
-					});
-
-					getAllCategories();
 				});
+			}
+
+			function deleteCategory(category, id) {
+				$.ajax({
+					url : "/category/delete",
+					method : "DELETE",
+					data : {
+						id : id
+					},
+					complete : function(data) {
+						switch (data.status) {
+						case 200:
+							category.remove();
+							break;
+						case 401:
+							window.location.href = "index.html"
+							break;
+						case 404:
+							alert("Category nqmaaaa");
+							break;
+						}
+					}
+				});
+			}
+
+			function updateCategory(categoryName, categoryId) {
+				updateClick(categoryName);
+
+				$('.update-butonq').click(function() {
+
+					name_update = $('#update-name').val();
+
+					$.ajax({
+						url : "/category/update",
+						method : "POST",
+						data : {
+							categoryId : categoryId,
+							name : name_update
+						},
+						success : function(data) {
+							if (data.includes("Error:")) {
+								alert(data);
+							} else {
+								showCategory(name, data);
+								window.location.href="category.html";
+							}
+						},
+						fail : function() {
+							alert("Error!");
+						}
+					});
+
+				});
+			}
+
+			function showCategory(categoryName, categoryId) {
+				var kloning = $('#cloneMe').clone();
+
+				kloning.find('h4').text(categoryName);
+
+				kloning.find('.delete').click(function() {
+					deleteCategory(kloning, categoryId)
+				});
+
+				kloning.find('.update').click(function() {
+					updateCategory(categoryName, categoryId)
+				});
+
+				$('#category-list').prepend(kloning);
+				$('#cloneMe').val("");
+
+				kloning.show();
+			}
+
+			function getAllCategories() {
+				$.ajax({
+					url : "/category/all",
+					method : "GET",
+					success : function(data) {
+						data.forEach(function(category) {
+							showCategory(category.name, category.id);
+						});
+					},
+					fail : function() {
+						alert("Brada");
+					}
+				});
+			}
+
+			$('#logout').on('click', function() {
+
+				$.ajax({
+					url : "logout",
+					method : "POST",
+					complete : function(data) {
+						if (data.status == 418) {
+							alert("Why are you a teapot?");
+						}
+
+						window.location.href = "index.html";
+					}
+				});
+
+			});
+
+			getAllCategories();
+		});
 	</script>
 </body>
 </html>

@@ -5,3 +5,8 @@ function bindEvents(){
 function registerClick(){
 	$('#register-modal').modal('show');
 }
+
+function updateClick(categoryName){
+	$('#update-modal').modal('show');
+	$('#update-name').val(categoryName);
+}
