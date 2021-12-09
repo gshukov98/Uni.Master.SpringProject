@@ -11,27 +11,29 @@
 	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 
+<link href="assets/css/bootstrap.min.css" rel="stylesheet">
 <link href="assets/css/font-awesome.min.css" rel="stylesheet">
 
 <script src="js/vendor/jquery/jquery-1.12.1.min.js"></script>
+<script src="js/vendor/bootstrap/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
 
 
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
 	integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
 	crossorigin="anonymous"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
 	integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-	crossorigin="anonymous"></script>
+	crossorigin="anonymous"></script> -->
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
 	integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 	crossorigin="anonymous"></script>
-
 
 </head>
 <body>
@@ -59,10 +61,185 @@
 		</div>
 	</header>
 
-	<p>Products</p>
+	<div class="container">
+		<p>Добавяне на продукт</p>
+		<div class="col-md-5">
+			
+				<div class="form-group">
+				<label for="categoryId">Категория</label>
+					<select class="form-control" id="categoryId" name="categoryId">
+						
+					</select> <label for="productName">Име</label> <input type="text"
+						class="form-control" id="productName" name="productName"
+						placeholder="Въведете име"> <label for="productCategory">Цена</label>
+					<input type="text" class="form-control" id="productPrice"
+						name="productCategory" placeholder="Въведете цена"> <label
+						for="productQuantity">Количество</label> <input type="text"
+						class="form-control" id="productQuantity" name="productQuantity"
+						placeholder="Въведете количество">
+				</div>
+
+				<button type="button" class="btn btn-primary add">Добави</button>
+			
+		</div>
+
+		<div class="col-sm-8">
+
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Продукти</h3>
+				</div>
+
+				<ul class="list-group" style="min-height: 241px;" id="product-list">
+
+				</ul>
+			</div>
+
+		</div>
+	</div>
+	
+	<li class="list-group-item" style="display: none;" id="cloneMe">
+		<div class="row">
+
+			<div class="col-sm-7 col-xs-6">
+			<label>Категория</label>
+				<h3>Категория</h3>
+				<label>Име</label>
+				<h4>Име</h4>
+				<label>Цена</label>
+				<h5>Цена</h5>
+				<label>Количество</label>
+				<h6>Количество</h6>
+			</div>
+			<div class="col-sm-3 col-xs-12">
+				<button type="button" class="btn btn-danger pull-right delete">
+					<span class="glyphicon glyphicon-remove"></span>Изтриване
+				</button>
+				<button type="button" class="btn btn-success pull-right update">
+					<span class="glyphicon glyphicon-plus"></span>Ъпдейт
+				</button>
+			</div>
+		</div>
+	</li>
+
 
 	<script>
 		$(document).ready(function() {
+			
+			$('.add').click(function() {
+				addProduct();
+			});
+			
+			function addProduct() {
+				var select = document.getElementById('categoryId');
+				var categoryId = select.options[select.selectedIndex].value;
+				var text = select.options[select.selectedIndex].text;
+				console.log(categoryId);
+				
+				productName = $('#productName').val();
+				productQuantity = $('#productQuantity').val();
+				productPrice = $('#productPrice').val();
+
+				$.ajax({
+					url : '/product/add',
+					method : "POST",
+					data : {
+						productName : productName,
+						productQuantity:productQuantity,
+						productPrice:productPrice,
+						categoryId:categoryId
+					},
+					success : function(data) {
+						if (data.includes("Error:")) {
+							alert(data);
+						} else {
+							showProduct(text,productName,productQuantity,productPrice, data);
+						}
+					},
+					fail : function() {
+						alert("Errot");
+					}
+				});
+			}
+			
+			function showProduct(categoryId,productName,productQuantity,productPrice, productId){
+				var kloning = $('#cloneMe').clone();
+				
+				kloning.find('h3').text(categoryId);
+				kloning.find('h4').text(productName);
+				kloning.find('h5').text(productQuantity);
+				kloning.find('h6').text(productPrice);
+
+				kloning.find('.delete').click(function() {
+					deleteProduct(kloning, productId)
+				});
+
+				kloning.find('.update').click(function() {
+					updateProduct(productName,productQuantity,productPrice, productId)
+				});
+				
+				$('#product-list').prepend(kloning);
+				$('#cloneMe').val("");
+
+				kloning.show();
+			}
+			
+			function getAllProducts() {
+				$.ajax({
+					url : "/product/all",
+					method : "GET",
+					success : function(data) {
+						data.forEach(function(product) {
+							showProduct(product.category.name, product.name,product.quantity,product.price,product.id);
+						});
+					},
+					fail : function() {
+						alert("Brada");
+					}
+				});
+			}
+			
+			function getAllCategories() {
+				$.ajax({
+					url : "/category/all",
+					method : "GET",
+					success : function(data) {
+						data.forEach(function(category) {
+							var select = document.getElementById("categoryId");
+							var el = document.createElement("option");
+							 el.textContent = category.name;
+							 el.value = category.id;
+							 select.appendChild(el);
+						});
+					},
+					fail : function() {
+						alert("Brada");
+					}
+				});
+			}
+			
+			function deleteProduct(product, id) {
+				$.ajax({
+					url : "/product/delete",
+					method : "DELETE",
+					data : {
+						id : id
+					},
+					complete : function(data) {
+						switch (data.status) {
+						case 200:
+							product.remove();
+							break;
+						case 401:
+							window.location.href = "index.html"
+							break;
+						case 404:
+							alert("Product nqmaaaa");
+							break;
+						}
+					}
+				});
+			}
 
 			$('#logout').on('click', function() {
 
@@ -80,6 +257,9 @@
 
 			});
 
+			getAllCategories();
+			getAllProducts();
+			
 		});
 	</script>
 
