@@ -70,7 +70,7 @@ public class ProductContorller {
 
 	@PostMapping(path = "/product/update")
 	public String updateProduct(@RequestParam(value = "productId") int id,
-			@RequestParam(value = "productName") String name, @RequestParam(value = "productPice") double price,
+			@RequestParam(value = "productName") String name, @RequestParam(value = "productPrice") double price,
 			@RequestParam(value = "productQuantity") double quantity, HttpSession session) {
 
 		UserEntity user = (UserEntity) session.getAttribute("user");
